@@ -27,7 +27,7 @@ create table if not exists usuario(
     primary key (usuario_id)
 ) ENGINE = INNODB;
 
-create table if not exists presamo(
+create table if not exists prestamo(
 	prestamo_id int not null auto_increment,
     usuario_id int not null,
     libro_id int not null,
