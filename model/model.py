@@ -20,3 +20,68 @@ class Model:
     
     def close_db(self):
         self.cnx.close()
+
+
+# Usuario Methods ---------------
+
+    def crear_usuario(self, nombre, email, tel):
+        try:
+            sql = 'INSERT INTO usuario(`nombre_completo`, `email`, `telefono`) VALUES(%s, %s, %s)'
+            vals = (nombre, email, tel)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err 
+    
+    def buscar_usuario(self, id):
+        try:
+            sql = 'SELECT * FROM usuario WHERE usuario_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def buscar_todos_usuarios(self):
+        try:
+            sql = 'SELECT * FROM usuario'
+            self.cursor.execute(sql)
+            record = self.cursor.fetchall()
+            return record
+        except connector.Error as err:
+            return err
+    
+    def buscar_usuario_tel(self, tel):
+        try:
+            sql = 'SELECT * FROM usuario WHERE telefono = %s'
+            vals = (tel,)
+            self.cursor.execute(sql,vals)
+            record = self.cursor.fetchall()
+            return record
+        except connector.Error as err:
+            return err
+
+    def actualizar_usuario(self, campos, vals):
+        # vals = (campo 1, campo2, ... , usuario_id)
+        try:
+            sql = 'UPDATE usuario SET '+','.join(campos)+' WHERE usuario_id = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def eliminar_usuario(self, id):
+        try: 
+            sql = 'DELETE FROM usuario WHERE usuario_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
