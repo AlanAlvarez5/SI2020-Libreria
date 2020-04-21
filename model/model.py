@@ -85,3 +85,76 @@ class Model:
         except connector.Error as err:
             self.cnx.rollback()
             return err
+
+# Prestamo Methods ---------------------
+
+    def crear_prestamo(self, usuario_id, libro_id, fecha, estatus):
+        try:
+            sql = 'INSERT INTO prestamo(`usuario_id`, `libro_id`, `fecha`, `estatus`) VALUES(%s, %s, %s, %s)'
+            vals = (usuario_id, libro_id, fecha, estatus)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err 
+
+    def buscar_prestamo_id(self, id):
+        try:
+            sql = 'SELECT * FROM prestamo WHERE prestamo_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def buscar_prestamo_libro(self, id):
+        try:
+            sql = 'SELECT * FROM prestamo WHERE libro_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def buscar_prestamo_usuario(self, id):
+        try:
+            sql = 'SELECT * FROM prestamo WHERE usuario_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def buscar_todos_prestamos(self):
+        try:
+            sql = 'SELECT * FROM prestamo'
+            self.cursor.execute(sql)
+            record = self.cursor.fetchall()
+            return record
+        except connector.Error as err:
+            return err
+
+    def actualizar_prestamo(self, campos, vals):
+        try:
+            sql = 'UPDATE prestamo SET '+','.join(campos)+' WHERE prestamo_id = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def eliminar_prestamo(self, id):
+        try: 
+            sql = 'DELETE FROM prestamo WHERE prestamo_id = %s'
+            vals = (id,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
