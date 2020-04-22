@@ -158,3 +158,67 @@ class Model:
         except connector.Error as err:
             self.cnx.rollback()
             return err
+
+
+# Libros Methods ---------------------------------------------------------------------------
+
+    def crear_libro(self, titulo, autor, editorial, no_paginas, genero_id, cantidad, disponible):
+        try:
+            sql = 'INSERT INTO libro (`titulo`, `autor`, `editorial`, `no_paginas`, `genero_id`, `cantidad`, `disponible`) VALUES(%s, %s, %s, %s, %s, %s, %s)'
+            vals = (titulo, autor, editorial, no_paginas, genero_id, cantidad, disponible)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err 
+
+    def buscar_libro(self, libro_id):
+        try:
+            sql = 'SELECT * FROM libro WHERE libro_id = %s'
+            vals = (libro_id,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+    
+    def buscar_libro_titulo(self, titulo):
+        try:
+            sql = 'SELECT * FROM libro WHERE titulo = %s'
+            vals = (titulo,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+    
+    def buscar_todos_libros(self):
+          try:
+               sql = 'SELECT * FROM libro'
+               self.cursor.execute(sql)
+               records = self.cursor.fetchall()
+               return records
+          except connector.Error as err:
+               return(err) 
+    
+    def actualizar_libro(self, campos, vals):
+        try:
+            sql = 'UPDATE libro SET '+','.join(campos)+' WHERE libro_id = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+    
+    def eliminar_libro(self, libro_id):
+        try: 
+            sql = 'DELETE FROM libro WHERE libro_id = %s'
+            vals = (libro_id,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err

@@ -1,4 +1,4 @@
-user:alan
-password:easiermean5
+user:cj
+password:SqL1380
 host:localhost
 database:library_db
