@@ -59,7 +59,7 @@ class Model:
             sql = 'SELECT * FROM usuario WHERE telefono = %s'
             vals = (tel,)
             self.cursor.execute(sql,vals)
-            record = self.cursor.fetchall()
+            record = self.cursor.fetchone()
             return record
         except connector.Error as err:
             return err
@@ -114,7 +114,7 @@ class Model:
             sql = 'SELECT * FROM prestamo WHERE libro_id = %s'
             vals = (id,)
             self.cursor.execute(sql, vals)
-            record = self.cursor.fetchone()
+            record = self.cursor.fetchall()
             return record
         except connector.Error as err:
             return err
@@ -124,7 +124,7 @@ class Model:
             sql = 'SELECT * FROM prestamo WHERE usuario_id = %s'
             vals = (id,)
             self.cursor.execute(sql, vals)
-            record = self.cursor.fetchone()
+            record = self.cursor.fetchall()
             return record
         except connector.Error as err:
             return err
