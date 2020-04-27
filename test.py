@@ -1,6 +1,6 @@
-from model.model import Model
+# from model.model import Model
 
-m = Model()
+# m = Model()
 
 # m.crear_usuario('Alan', 'alan@mail.com', '4646461251')
 
@@ -31,4 +31,9 @@ m = Model()
 # print(a)
 
 
-m.close_db()
+# m.close_db()
+
+from controller.controller import Controller
+
+c = Controller()
+c.start()

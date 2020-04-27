@@ -218,7 +218,8 @@ class Model:
             vals = (libro_id,)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
-            return True
+            count = self.cursor.rowcount
+            return count
         except connector.Error as err:
             self.cnx.rollback()
             return err

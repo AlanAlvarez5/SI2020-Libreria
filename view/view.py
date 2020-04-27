@@ -31,9 +31,9 @@ class View:
         print(output)
     
     def ok(self, id, op):
-        print('-'*(len(str(id)))+len(op)+24)
-        print('- ¡'+(str(id))+' se '+op+' correctamente -')
-        print('-'*(len(str(id)))+len(op)+24)
+        print('+'*(len(str(id))+len(op)+24))
+        print('+ ¡'+str(id)+' se '+op+' correctamente! +') 
+        print('+'*(len(str(id))+len(op)+24))
 
     def error(self, err):
         print(' Error '.center(len(err)+4, '-'))
@@ -66,7 +66,11 @@ class View:
         print(' 5. Actualizar Usuario')
         print(' 6. Eliminar Usuario')
         print(' 7. Regresar')
-    # Libro  menú
+    """
+    ************************************
+    *       Vistas para libro          *
+    ************************************
+    """
     def menu_libro(self):
         print('-------------------------')
         print('-     Menú Prestamo    -')
@@ -78,3 +82,30 @@ class View:
         print(' 5. Actualizar Libro')
         print(' 6. Eliminar Libro')
         print(' 7. Regresar')
+    
+    #  def show_a_zip(self, record):
+    #       print(f'{record[0]:<6}|{record[1]:<35}|{record[2]:<35}')
+
+    # def show_libro_header(self, libro):
+    #     print(f'{libro[0]:<3}|{libro[1]:<30}|{libro[2]:<30}|{libro[3]:<30}|{libro[4]:<4}|{libro[5]:<30}|{libro[6]:<4}|{libro[7]:<4}')
+    
+    def show_libro(self, libro):
+        print('ID: ', libro[0])
+        print('Titulo: ', libro[1])
+        print('Autor: ', libro[2])
+        print('Editorial: ', libro[3])
+        print('Numero de paginas: ', libro[4])
+        print('Genero: ', libro[5])
+        print('Cantidad de libros: ', libro[6])
+        print('Libros disponibles ', libro[7])
+    
+    
+    def show_libro_header(self, header):
+        print(header.center(48,'*'))
+        print('-'*48)
+
+    def show_libro_midder(self):
+        print('-'*48)
+
+    def show_libro_footer(self):
+        print('-'*48)

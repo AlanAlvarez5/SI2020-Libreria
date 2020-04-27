@@ -22,7 +22,7 @@ class Controller:
             elif o == '2':
                 self.view.menu_usuario()
             elif o == '3':
-                self.view.menu_libro()
+                self.libro_menu()
             elif o == '4':
                 self.view.end()
             else:
@@ -169,3 +169,141 @@ class Controller:
                 self.view.error('Prestamo no existe')
             else:
                 self.view.error('Problema al eliminar el prestamo')
+    
+    # Controlador para libro
+    def libro_menu(self):
+        o = '0'
+        while o != '7':
+            self.view.menu_libro()
+            self.view.opcion('7')
+            o = input()
+            if o =='1':
+                self.crear_libro()
+            elif o == '2':
+                self.buscar_libro()
+            elif o == '3':
+                self.buscar_libro_titulo()
+            elif o == '4':
+                self.buscar_todos_libros()
+            elif o == '5':
+                self.actualizar_libro()
+            elif o == '6':
+                self.eliminar_libro()
+            elif o == '7':
+                return
+    
+    def preguntar_libro(self):
+        self.view.pregunta('Titulo: ')
+        titulo = input()
+        self.view.pregunta('Autor: ')
+        autor = input()
+        self.view.pregunta('Editorial: ')
+        editorial = input()
+        self.view.pregunta('Numero de paginas: ')
+        no_paginas = input()
+        self.view.pregunta('Genero: ')
+        genero_id = input()
+        self.view.pregunta('Cantidad de libros: ')
+        cantidad = input()
+        self.view.pregunta('Libros disponibles ')
+        disponible = input()
+        return [titulo, autor, editorial, no_paginas, genero_id, cantidad, disponible]
+    
+    def crear_libro(self):
+        titulo, autor, editorial, no_paginas, genero_id, cantidad, disponible = self.preguntar_libro()
+        out = self.model.crear_libro(titulo, autor, editorial, no_paginas, genero_id, cantidad, disponible)
+        if out == True:
+            self.view.ok(titulo, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL LIBRO ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO AGREGAR EL LIBRO. REVISA.')
+        return
+
+    def buscar_libro(self):
+        self.view.pregunta('ID libro: ')
+        libro_id = input()
+        libro = self.model.buscar_libro(libro_id)
+        if type(libro) == tuple:
+            self.view.show_libro_header(' Datos del libro '+libro_id+' ')
+            self.view.show_libro(libro)
+            self.view.show_libro_midder()
+            self.view.show_libro_footer()
+        else:
+               if libro == None:
+                    self.view.error('EL LIBRO NO EXISTE')
+               else: 
+                    self.view.error('PROBLEMA AL LEER EL LIBRO. REVISA.')
+        return
+
+
+    def buscar_libro_titulo(self):
+        self.view.pregunta('Titulo: ')
+        titulo = input()
+        libro = self.model.buscar_libro_titulo(titulo)
+        if type(libro) == tuple:
+            self.view.show_libro_header(' Datos del libro '+titulo+' ')
+            self.view.show_libro(libro)
+            self.view.show_libro_midder()
+            self.view.show_libro_footer()
+        else:
+               if libro == None:
+                    self.view.error('EL LIBRO NO EXISTE')
+               else: 
+                    self.view.error('PROBLEMA AL LEER EL LIBRO. REVISA.')
+        return
+
+
+    def buscar_todos_libros(self):
+        libros = self.model.buscar_todos_libros()
+        if type(libros) == list:
+            self.view.show_libro_header(' Todos los libros ')
+            for libro in libros:
+                self.view.show_libro(libro)
+                self.view.show_libro_midder()
+            self.view.show_libro_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS LIBROS. REVISA')
+        return
+
+    def actualizar_libro(self):
+        self.view.pregunta('ID libro: ')
+        libro_id = input()
+        libro = self.model.buscar_libro(libro_id)
+        if type(libro) == tuple:
+            self.view.show_libro_header(' Datos del libro '+libro_id+' ')
+            self.view.show_libro(libro)
+            self.view.show_libro_midder()
+            self.view.show_libro_footer()
+        else:
+                if libro == None:
+                    self.view.error('EL LIBRO NO EXISTE')
+                else: 
+                    self.view.error('PROBLEMA AL LEER EL LIBRO. REVISA.')
+                return
+        self.view.msg('Ingresa los valores a modificar(vacio para dejarlo igual)')
+        whole_vals = self.preguntar_libro()
+        fields, vals = self.update_lists(['titulo', 'autor', 'editorial', 'no_paginas', 'genero_id', 'cantidad', 'disponible'], whole_vals)
+        vals.append(libro_id)
+        vals = tuple(vals)
+        out = self.model.actualizar_libro(fields, vals)
+        if out == True:
+            self.view.ok(libro_id, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL LIBRO. REVISA')
+        return
+
+    def eliminar_libro(self):
+        self.view.pregunta('ID libro: ')
+        libro_id = input()
+        count = self.model.eliminar_libro(libro_id)
+        if count != 0:
+             self.view.ok(libro_id, 'borro')
+        else: 
+             if count == 0:
+                  self.view.error('EL LIBRO NO EXISTE')
+             else:
+                  self.view.error('PROBLEMA AL BORRAR EL LIBRO. REVISA.')
+        return
+     
