@@ -66,6 +66,25 @@ class View:
         print(' 5. Actualizar Usuario')
         print(' 6. Eliminar Usuario')
         print(' 7. Regresar')
+
+
+
+    def show_usuario (self, record):
+        print(f'{record[1]:<30}|{record[2]:<30}|{record[3]:<10}')
+
+    def show_usuario_header (self, header):
+        print(header.center(72,'*'))
+        print('Nombre'.ljust(30)+'|'+'Email'.ljust(30)+'|'+'Telefono'.ljust(10))
+        print('-'*72)
+
+    def show_usuario_midder (self):
+        print('-'*72)
+
+    def show_usuario_footer (self):
+        print('-'*72)
+
+
+
     """
     ************************************
     *       Vistas para libro          *
@@ -87,7 +106,7 @@ class View:
     #       print(f'{record[0]:<6}|{record[1]:<35}|{record[2]:<35}')
 
     # def show_libro_header(self, libro):
-    #     print(f'{libro[0]:<3}|{libro[1]:<30}|{libro[2]:<30}|{libro[3]:<30}|{libro[4]:<4}|{libro[5]:<30}|{libro[6]:<4}|{libro[7]:<4}')
+        # print(f'{libro[0]:<3}|{libro[1]:<30}|{libro[2]:<30}|{libro[3]:<30}|{libro[4]:<4}|{libro[5]:<30}|{libro[6]:<4}|{libro[7]:<4}')
     
     def show_libro(self, libro):
         print('ID: ', libro[0])

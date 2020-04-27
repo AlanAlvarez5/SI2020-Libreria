@@ -20,7 +20,7 @@ class Controller:
             if o == '1':
                 self.view.menu_prestamo()
             elif o == '2':
-                self.view.menu_usuario()
+                self.usuario_menu()
             elif o == '3':
                 self.libro_menu()
             elif o == '4':
@@ -307,3 +307,131 @@ class Controller:
                   self.view.error('PROBLEMA AL BORRAR EL LIBRO. REVISA.')
         return
      
+    # Controlador para usuarios
+    def usuario_menu(self):
+        o = '0'
+        while o != '7':
+            self.view.menu_usuario()
+            self.view.opcion('7')
+            o = input()
+            if o =='1':
+                self.crear_usuario()
+            elif o == '2':
+                self.buscar_usuario()
+            elif o == '3':
+                self.buscar_usuario_tel()
+            elif o == '4':
+                self.buscar_todos_usuarios()
+            elif o == '5':
+                self.actualizar_usuario()
+            elif o == '6':
+                self.eliminar_usuario()
+            elif o == '7':
+                return
+    
+    def preguntar_usuario(self):
+        self.view.pregunta('Nombre: ')
+        nombre_completo = input()
+        self.view.pregunta('Email: ')
+        email = input()
+        self.view.pregunta('Telefono: ')
+        telefono = input()
+        return [nombre_completo, email, telefono]
+    
+    def crear_usuario(self):
+        nombre_completo, email, telefono = self.preguntar_usuario()
+        out = self.model.crear_usuario(nombre_completo, email, telefono)
+        if out == True:
+            self.view.ok(nombre_completo, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL USUARIO ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO AGREGAR EL USUARIO. REVISA.')
+        return
+
+    def buscar_usuario(self):
+        self.view.pregunta('ID usuario: ')
+        usuario_id = input()
+        usuario = self.model.buscar_usuario(usuario_id)
+        if type(usuario) == tuple:
+            self.view.show_usuario_header(' Datos del libro '+usuario_id+' ')
+            self.view.show_usuario(usuario)
+            self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+               if usuario_id == None:
+                    self.view.error('EL LIBRO NO EXISTE')
+               else: 
+                    self.view.error('PROBLEMA AL LEER EL LIBRO. REVISA.')
+        return
+
+
+    def buscar_usuario_tel(self):
+        self.view.pregunta('Telefono: ')
+        telefono = input()
+        usuario = self.model.buscar_usuario_tel(telefono)
+        if type(usuario) == tuple:
+            self.view.show_usuario_header(' Datos del usuario '+telefono+' ')
+            self.view.show_usuario(usuario)
+            self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+               if usuario == None:
+                    self.view.error('EL USUARIO NO EXISTE')
+               else: 
+                    self.view.error('PROBLEMA AL LEER EL USUARIO. REVISA.')
+        return
+
+
+    def buscar_todos_usuarios(self):
+        usuarios = self.model.buscar_todos_usuarios()
+        if type(usuarios) == list:
+            self.view.show_usuario_header(' Todos los usuarios ')
+            for usuario in usuarios:
+                self.view.show_usuario(usuario)
+                self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS USUARIOS. REVISA')
+        return
+
+    def actualizar_usuario(self):
+        self.view.pregunta('ID usuario: ')
+        usuario_id = input()
+        usuario = self.model.buscar_usuario(usuario_id)
+        if type(usuario) == tuple:
+            self.view.show_usuario_header(' Datos del usuario '+usuario_id+' ')
+            self.view.show_usuario(usuario)
+            self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+                if usuario == None:
+                    self.view.error('EL USUARIO NO EXISTE')
+                else: 
+                    self.view.error('PROBLEMA AL LEER EL USUARIO. REVISA.')
+                return
+        self.view.msg('Ingresa los valores a modificar(vacio para dejarlo igual)')
+        whole_vals = self.preguntar_usuario()
+        fields, vals = self.update_lists(['nombre_completo', 'email', 'telefono'], whole_vals)
+        vals.append(usuario_id)
+        vals = tuple(vals)
+        out = self.model.actualizar_usuario(fields, vals)
+        if out == True:
+            self.view.ok(usuario_id, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL USUARIO. REVISA')
+        return
+
+    def eliminar_usuario(self):
+        self.view.pregunta('ID usuario: ')
+        usuario_id = input()
+        count = self.model.eliminar_usuario(usuario_id)
+        if count != 0:
+             self.view.ok(usuario_id, 'borro')
+        else: 
+             if count == 0:
+                  self.view.error('EL USUARIO NO EXISTE')
+             else:
+                  self.view.error('PROBLEMA AL BORRAR EL USUARIO. REVISA.')
+        return
