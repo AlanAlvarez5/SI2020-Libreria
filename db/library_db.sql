@@ -1,7 +1,5 @@
 
 create database if not exists library_db;
-
-
 USE library_db;
 
 create table if not exists libro(
